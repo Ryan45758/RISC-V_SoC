@@ -90,7 +90,7 @@ end
 
 initial begin
     clk = 1'b0;
-    forever clk = #(`CLK_PRIOD / 2) ~clk;
+    forever clk = #(`CLK_PERIOD / 2) ~clk;
 end
 
 // Simulation end check
@@ -130,12 +130,12 @@ always @(posedge simend) begin
 end
 
 initial begin
-    // #(`CLK_PRIOD * 50630);
+    // #(`CLK_PERIOD * 50630);
     // force u_cpu_wrap.u_cpu_top.u_sru.mie_meie = 1'b1;
     // force u_cpu_wrap.u_cpu_top.u_sru.mip_meip = 1'b1;
-    // #(`CLK_PRIOD * 72);
+    // #(`CLK_PERIOD * 72);
     // // force u_cpu_wrap.u_cpu_top.u_sru.int_mask = 1'b0;
-    // #(`CLK_PRIOD * 1);
+    // #(`CLK_PERIOD * 1);
     // release u_cpu_wrap.u_cpu_top.u_sru.mie_meie;
     // release u_cpu_wrap.u_cpu_top.u_sru.mip_meip;
     // // release u_cpu_wrap.u_cpu_top.u_sru.int_mask;

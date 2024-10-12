@@ -21,7 +21,7 @@ initial begin
     $readmemh("rom_3.hex", byte_3);
 end
   
-always_ff @(posedge CK) begin
+always @(posedge CK) begin
     if (CS) DO <= {byte_3[A], byte_2[A], byte_1[A], byte_0[A]};
 end
 `else
@@ -33,7 +33,7 @@ logic [7:0] byte_3 [2048];
 
 assign data_out_pre = CS ? {byte_3[A], byte_2[A], byte_1[A], byte_0[A]} : 32'hx;
 
-always_ff @(posedge CK) begin
+always @(posedge CK) begin
     if (CS & WE) begin
         if (BYTE[0]) byte_0[A] <= DI[ 7: 0];
         if (BYTE[1]) byte_1[A] <= DI[15: 8];
@@ -42,7 +42,7 @@ always_ff @(posedge CK) begin
     end
 end
 
-always_ff @(posedge CK) begin
+always @(posedge CK) begin
     DO <= data_out_pre;
 end
 `endif

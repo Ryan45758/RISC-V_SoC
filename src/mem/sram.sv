@@ -102,7 +102,7 @@ logic [31:0] memory [2**15];
 
 assign data_out_pre = CS ? memory[A] : 32'hx;
 
-always_ff @(posedge CK) begin
+always @(posedge CK) begin
     if (CS & WE) begin
         if (BYTE[0]) memory[A][ 7: 0] <= DI[ 7: 0];
         if (BYTE[1]) memory[A][15: 8] <= DI[15: 8];
@@ -111,7 +111,7 @@ always_ff @(posedge CK) begin
     end
 end
 
-always_ff @(posedge CK) begin
+always @(posedge CK) begin
     DO <= data_out_pre;
 end
 `endif

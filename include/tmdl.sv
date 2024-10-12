@@ -164,7 +164,7 @@ task tm_print;
             case (fmt[i])
                 "\n": return;
                 "%": begin
-                    $write("%");
+                    $write("%%");
                     cont_flag = 1;
                 end
                 "l": begin

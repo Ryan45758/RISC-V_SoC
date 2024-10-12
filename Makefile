@@ -73,7 +73,7 @@ sim: all | ${bld_dir}
 	@mkdir ${bld_dir}/prog;
 	@mkdir ${bld_dir}/prog/include;
 	@for file in ${sim_dir}/prog${prog}/*; do \
-	    if [[ ! "$${file}" == "${sim_dir}/prog${prog}/*" ]]; then \
+	    if [[ !("$${file}" == "${sim_dir}/prog${prog}/*") ]]; then \
 	        _file=$$(basename $${file}); \
 	        if [[ "$${_file#*.}" == "c" ]]; then \
 	            ${TMDL_PARSE_C} $${file} ${bld_dir}/prog/$${_file} ${bld_dir}/${tmdl_msg_log}; \
@@ -86,11 +86,12 @@ sim: all | ${bld_dir}
 	done;
 	@touch ${bld_dir}/${tmdl_msg_log};
 	@cp ${bld_dir}/mmap_soc.h ${bld_dir}/prog/include
-	
 	@if [ "$(prog)" == "3" ] && [ "${isa}" == "" ]; then \
 	    for i in $(ISA); do \
 	        make -C $(bld_dir)/prog isa=$${i} > /dev/null; \
-	        res=$$(cd $(bld_dir); ncverilog -sv -f verdi.f +prog_path=prog +prog=prog$(prog) +isa=$${i} +define+NOFSDB +define+MAX_CYCLE=500000;); \
+	        # cd $(bld_dir); \
+	        # vcs -R -sverilog -f verdi.f -full64 -fsdb -LDFLAGS -Wl,--no-as-needed +prog_path=prog +prog=prog$(prog) +isa=$${i} +define+MAX_CYCLE=500000; \
+	        res=$$(cd $(bld_dir); vcs -R -sverilog -f verdi.f -full64 -fsdb -LDFLAGS -Wl,--no-as-needed +prog_path=prog +prog=prog$(prog) +isa=$${i} +define+NOFSDB +define+MAX_CYCLE=500000;); \
             cpi=$$(echo "$${res}" | grep "CPI:"); \
             inst=$$(echo "$${res}" | grep "minstret:"); \
             cycl=$$(echo "$${res}" | grep "mcycle:"); \
@@ -100,11 +101,12 @@ sim: all | ${bld_dir}
 	        else \
 				printf "%-20s pass (%-20s, %-20s, %-20s)\n" "$${i}" "$${cpi}" "$${inst}" "$${cycl}" ; \
 	        fi; \
+	        break; \
 	    done; \
 	else \
 	    make -C $(bld_dir)/prog isa=${isa}; \
 	    cd $(bld_dir); \
-	    ncverilog -sv -f verdi.f +prog_path=prog +prog=prog$(prog) +isa=${isa} +define+MAX_CYCLE=1000000000 +nclinedebug; \
+	    vcs -R -sverilog -f verdi.f -full64 -fsdb -LDFLAGS -Wl,--no-as-needed +prog_path=prog +prog=prog$(prog) +isa=${isa} +define+MAX_CYCLE=1000000000 +vcsd +debug_access+all; \
 	fi;
 
 axi: | ${bld_dir}
